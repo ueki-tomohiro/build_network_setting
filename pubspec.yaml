@@ -41,9 +41,7 @@ melos:
         dependsOn: build_runner
 
     api:
-      run: |
-        yarn gen:api
-        melos run format
+      run: yarn gen:api && melos run format
       description: generate api from OpenApi
 
     run:mock:

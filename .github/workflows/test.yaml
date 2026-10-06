@@ -3,6 +3,9 @@ name: test
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -48,10 +51,11 @@ jobs:
       - name: flutter test combine
         run: melos run combine
         if: success() || failure()
+      # fork PR の GITHUB_TOKEN は読み取り専用でレポートを公開できないため、同一リポジトリの PR のみ実行する
       - uses: ueki-tomohiro/flutter-test-action@v1
         with:
           machinePath: report/test.json
-        if: success() || failure()
+        if: (success() || failure()) && github.event.pull_request.head.repo.full_name == github.repository
 
   openapi:
     name: OpenAPI Validate
