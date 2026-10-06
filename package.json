@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "gen:api": "run-p --print-label --print-name generate-api:*",
-    "generate-api:todo": "SERVICE_NAME=external API_NAME=todo yarn generate-openapi",
+    "generate-api:todo": "SERVICE_NAME=external API_NAME=todo pnpm generate-openapi",
     "generate-openapi": "openapi-generator-cli generate -t ./document/api/templates -g dart -i ./document/api/services/$SERVICE_NAME/$API_NAME/openapi.yaml -o ./packages/api/$SERVICE_NAME/$API_NAME --global-property apis,apiDocs=false,apiTests=false,models,modelDocs=false,modelTests=false,supportingFiles --additional-properties=pubLibrary=$SERVICE_NAME.$API_NAME.api,pubName=${SERVICE_NAME}_${API_NAME}",
-    "mock:todo": "SERVICE_NAME=external API_NAME=todo PORT=4010 yarn mock-openapi",
+    "mock:todo": "SERVICE_NAME=external API_NAME=todo PORT=4010 pnpm mock-openapi",
     "mock-openapi": "prism mock --host $(ifconfig -l | xargs -n1 ipconfig getifaddr | sed -n -e 1p) --port=${PORT} ./document/api/services/${SERVICE_NAME}/${API_NAME}/openapi.yaml",
-    "new-version": "yarn ts-node scripts/bump-version.ts",
+    "new-version": "pnpm exec ts-node scripts/bump-version.ts",
     "validate:api": "run-p --print-label --print-name validate-api:*",
-    "validate-api:todo": "SERVICE_NAME=external API_NAME=todo yarn validate-openapi",
+    "validate-api:todo": "SERVICE_NAME=external API_NAME=todo pnpm validate-openapi",
     "validate-openapi": "swagger-cli validate ./document/api/services/$SERVICE_NAME/$API_NAME/openapi.yaml",
     "start-mock": "run-p --print-label --print-name mock:*"
   },
@@ -33,18 +33,10 @@
   },
   "engines": {
     "node": "^24",
-    "yarn": ">=1"
+    "pnpm": ">=12"
   },
   "volta": {
-    "node": "24.19.0",
-    "yarn": "1.22.19"
+    "node": "24.19.0"
   },
-  "resolutions": {
-    "**/js-yaml": "^3.15.2",
-    "**/lodash": "^4.18.1",
-    "**/chokidar/**/picomatch": "^2.3.2",
-    "**/ajv-formats/ajv": "^8.20.0",
-    "**/@apidevtools/swagger-parser/ajv": "^8.20.0",
-    "**/postman-collection/uuid": "^11.1.1"
-  }
+  "packageManager": "pnpm@12.1.0"
 }
