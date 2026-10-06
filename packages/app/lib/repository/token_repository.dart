@@ -19,5 +19,6 @@ class TokenRepository implements ITokenRepository {
   }
 }
 
-final tokenRepositoryProvider =
-    Provider.autoDispose<ITokenRepository>((ref) => TokenRepository());
+final tokenRepositoryProvider = Provider.autoDispose<ITokenRepository>(
+  (ref) => TokenRepository(),
+);

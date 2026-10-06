@@ -6,11 +6,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'todo_controller.g.dart';
 
 @riverpod
-Future<TodoState> todoController(TodoControllerRef ref, int todoId) async {
+Future<TodoState> todoController(Ref ref, int todoId) async {
   final ITodoRepository repository = ref.read(todoRepositoryProvider);
-  final todo = await repository.getTodo(todoId);
 
   try {
+    final todo = await repository.getTodo(todoId);
     if (todo != null) {
       return TodoState.loaded(todo: todo);
     } else {
@@ -22,7 +22,7 @@ Future<TodoState> todoController(TodoControllerRef ref, int todoId) async {
 }
 
 @riverpod
-Future<List<Todo>> todoListController(TodoListControllerRef ref) async {
+Future<List<Todo>> todoListController(Ref ref) async {
   final ITodoRepository repository = ref.read(todoRepositoryProvider);
   return await repository.getTodos() ?? [];
 }

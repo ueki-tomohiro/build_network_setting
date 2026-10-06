@@ -25,7 +25,7 @@ class EditPage extends HookConsumerWidget {
     }, [todoState]);
 
     useEffect(() {
-      if (editState is TodoStateUpdated) {
+      if (editState.value is TodoStateUpdated) {
         Future.microtask(() {
           ref.invalidate(todoListControllerProvider);
           ref.invalidate(todoControllerProvider(todoId));
@@ -35,18 +35,21 @@ class EditPage extends HookConsumerWidget {
       return null;
     }, [editState]);
 
-    return Builder(builder: (context) {
-      if (todo != null) {
-        return Edit(
+    return Builder(
+      builder: (context) {
+        if (todo != null) {
+          return Edit(
             todo: todo,
             updateTodo: (description, endDate, completed) {
               ref
                   .read(todoEditControllerProvider(todoId).notifier)
                   .updateTodo(description, endDate, completed);
-            });
-      } else {
-        return Loading();
-      }
-    });
+            },
+          );
+        } else {
+          return Loading();
+        }
+      },
+    );
   }
 }

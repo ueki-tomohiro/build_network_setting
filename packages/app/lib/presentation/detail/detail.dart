@@ -5,11 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 class Detail extends HookWidget {
   final Todo todo;
   final VoidCallback editTodo;
-  const Detail({
-    super.key,
-    required this.todo,
-    required this.editTodo,
-  });
+  const Detail({super.key, required this.todo, required this.editTodo});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +13,7 @@ class Detail extends HookWidget {
       appBar: AppBar(
         title: Text('Detail'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: editTodo,
-          ),
+          IconButton(icon: const Icon(Icons.edit), onPressed: editTodo),
         ],
       ),
       body: SafeArea(
@@ -28,10 +21,7 @@ class Detail extends HookWidget {
           padding: EdgeInsets.all(16),
           child: Column(
             children: [
-              Text(
-                todo.description,
-                style: TextStyle(fontSize: 24),
-              ),
+              Text(todo.description, style: TextStyle(fontSize: 24)),
               ListTile(
                 leading: todo.completed
                     ? Icon(Icons.check_box_outlined)

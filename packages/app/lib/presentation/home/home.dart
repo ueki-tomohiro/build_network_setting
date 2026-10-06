@@ -20,20 +20,16 @@ class Home extends HookWidget {
       appBar: AppBar(
         title: Text('Home'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.add_box),
-            onPressed: registerTodo,
-          ),
+          IconButton(icon: const Icon(Icons.add_box), onPressed: registerTodo),
         ],
       ),
       body: SafeArea(
-          child: ListView.builder(
-        itemCount: todos.length,
-        itemBuilder: (context, index) => TodoListItem(
-          todo: todos[index],
-          onTap: selectTodo,
+        child: ListView.builder(
+          itemCount: todos.length,
+          itemBuilder: (context, index) =>
+              TodoListItem(todo: todos[index], onTap: selectTodo),
         ),
-      )),
+      ),
     );
   }
 }
