@@ -1,0 +1,68 @@
+name: test
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: set up repository
+        uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-flutter
+      - name: bootstrap workspace
+        run: melos bs
+      - name: generate code
+        run: melos run build_runner
+      - name: flutter lint
+        run: melos run lint
+
+  unit_test:
+    if: ${{ always() }}
+    needs: lint
+    name: Unit Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: set up repository
+        uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-flutter
+      - name: bootstrap workspace
+        run: melos bs
+      - name: generate code
+        run: melos run build_runner
+      - name: flutter test
+        run: melos run test-ci:flutter
+      - name: dart test
+        run: melos run test-ci:dart
+        if: success() || failure()
+      - name: flutter test combine
+        run: melos run combine
+        if: success() || failure()
+      # fork PR の GITHUB_TOKEN は読み取り専用でレポートを公開できないため、同一リポジトリの PR のみ実行する
+      - uses: ueki-tomohiro/flutter-test-action@v1
+        with:
+          machinePath: report/test.json
+        if: (success() || failure()) && github.event.pull_request.head.repo.full_name == github.repository
+
+  openapi:
+    name: OpenAPI Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: set up repository
+        uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-node
+      - name: validate openapi
+        run: yarn validate:api

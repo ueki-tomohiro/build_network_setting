@@ -4,8 +4,6 @@
 .dart_tool/
 .packages
 build/
-# If you're building an application, you may want to check-in your pubspec.lock
-pubspec.lock
 
 # IntelliJ related
 *.iml
@@ -31,7 +29,10 @@ pubspec.lock
 *.mock_setting.dart
 *.g.dart
 
-.fvm/flutter_sdk
+# test reports
+report/
+test.json
+coverage/
 
 .melos_tool/
 node_modules

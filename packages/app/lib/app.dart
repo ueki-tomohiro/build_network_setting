@@ -8,10 +8,14 @@ Future<void> runMyApp() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   FlutterError.onError = (details) {
-    logger.e(details.summary.toString(), details.exception, details.stack);
+    logger.e(
+      details.summary.toString(),
+      error: details.exception,
+      stackTrace: details.stack,
+    );
   };
 
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends HookConsumerWidget {
@@ -21,10 +25,7 @@ class MyApp extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
-      routerDelegate: ref.watch(routerProvider).routerDelegate,
-      routeInformationParser: ref.watch(routerProvider).routeInformationParser,
-      routeInformationProvider:
-          ref.watch(routerProvider).routeInformationProvider,
+      routerConfig: ref.watch(routerProvider),
       debugShowCheckedModeBanner: false,
       restorationScopeId: 'app',
       builder: BotToastInit(),

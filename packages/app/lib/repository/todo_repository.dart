@@ -6,7 +6,11 @@ import 'package:riverpod/riverpod.dart';
 abstract class ITodoRepository {
   Future<Todo?> registerTodo(String description, DateTime endDate);
   Future<Todo?> updateTodo(
-      int todoId, String description, DateTime endDate, bool completed);
+    int todoId,
+    String description,
+    DateTime endDate,
+    bool completed,
+  );
   Future<void> deleteTodo(int todoId);
   Future<List<Todo>?> getTodos();
   Future<Todo?> getTodo(int todoId);
@@ -20,11 +24,14 @@ class TodoRepository implements ITodoRepository {
     final authentication = tokenRepository.createAuthentication();
 
     final apiClient = ApiClient(
-        basePath: FlavorConfig.instance.variables['todo-api'] as String,
-        authentication: authentication);
+      basePath: FlavorConfig.instance.variables['todo-api'] as String,
+      authentication: authentication,
+    );
 
-    apiClient.addDefaultHeader('x-app-version',
-        FlavorConfig.instance.variables['app-version'] as String);
+    apiClient.addDefaultHeader(
+      'x-app-version',
+      FlavorConfig.instance.variables['app-version'] as String,
+    );
     apiClient.addDefaultHeader(
       'x-app-name',
       FlavorConfig.instance.variables['app-name'] as String,
@@ -41,17 +48,23 @@ class TodoRepository implements ITodoRepository {
   @override
   Future<Todo?> registerTodo(String description, DateTime endDate) =>
       _todoApi.registerTodo(
-          TodoRegisterble(description: description, endDate: endDate));
+        TodoRegisterble(description: description, endDate: endDate),
+      );
 
   @override
   Future<Todo?> updateTodo(
-          int todoId, String description, DateTime endDate, bool completed) =>
-      _todoApi.updateTodo(
-          todoId,
-          TodoUpdatable(
-              description: description,
-              endDate: endDate,
-              completed: completed));
+    int todoId,
+    String description,
+    DateTime endDate,
+    bool completed,
+  ) => _todoApi.updateTodo(
+    todoId,
+    TodoUpdatable(
+      description: description,
+      endDate: endDate,
+      completed: completed,
+    ),
+  );
 
   @override
   Future<void> deleteTodo(int todoId) => _todoApi.deleteTodo(todoId);

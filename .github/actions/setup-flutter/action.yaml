@@ -1,0 +1,21 @@
+name: setup flutter
+description: setup flutter (version from .tool-versions) and melos
+runs:
+  using: composite
+  steps:
+    - name: read flutter version
+      id: version
+      shell: bash
+      run: |
+        version=$(awk '$1 == "flutter" { sub(/-stable$/, "", $2); print $2 }' .tool-versions)
+        echo "flutter=${version}" >> "$GITHUB_OUTPUT"
+    - name: setup flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        flutter-version: ${{ steps.version.outputs.flutter }}
+        cache: true
+        pub-cache: true
+    - name: install melos command
+      shell: bash
+      run: dart pub global activate melos ^8.9.0

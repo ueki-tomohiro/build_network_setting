@@ -1,8 +1,89 @@
 name: app_workspace
 version: 1.0.7
+publish_to: none
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
+  sdk: ^3.13.0
+
+workspace:
+  - packages/app
+  - packages/mock_setting
+  - packages/api/external/todo
+
 dev_dependencies:
-  melos: ^3.0.0
-  lints: ^2.0.1
+  melos: ^8.9.0
+  lints: ^6.0.0
+
+melos:
+  repository: https://github.com/ueki-tomohiro/build_network_setting
+
+  ide:
+    intellij:
+      enabled: false
+
+  scripts:
+    lint:
+      run: melos run analyze && melos run format-check
+      description: Run all static analysis checks.
+
+    analyze:
+      exec: dart analyze --fatal-infos .
+
+    format:
+      run: dart format packages
+
+    format-check:
+      run: dart format --output=none --set-exit-if-changed packages
+
+    build_runner:
+      exec: dart run build_runner build
+      packageFilters:
+        dependsOn: build_runner
+
+    api:
+      run: yarn gen:api && melos run format
+      description: generate api from OpenApi
+
+    run:mock:
+      exec: flutter run --target lib/main_mock.dart
+      packageFilters:
+        scope: app
+
+    run:release:
+      exec: flutter run --target lib/main.dart
+      packageFilters:
+        scope: app
+
+    test:
+      run: melos run test:flutter && melos run test:dart
+      description: Run all unit tests.
+
+    test:flutter:
+      exec: flutter test
+      packageFilters:
+        flutter: true
+        dirExists:
+          - test
+
+    test:dart:
+      exec: dart test
+      packageFilters:
+        flutter: false
+        dirExists:
+          - test
+
+    test-ci:flutter:
+      exec: flutter test --file-reporter json:test.json
+      packageFilters:
+        flutter: true
+        dirExists:
+          - test
+
+    test-ci:dart:
+      exec: dart test --file-reporter json:test.json
+      packageFilters:
+        flutter: false
+        dirExists:
+          - test
+
+    combine: melos exec "\$MELOS_ROOT_PATH/scripts/combine_test.sh"

@@ -5,11 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 class TodoListItem extends HookWidget {
   final Todo todo;
   final ValueChanged<Todo> onTap;
-  const TodoListItem({
-    super.key,
-    required this.todo,
-    required this.onTap,
-  });
+  const TodoListItem({super.key, required this.todo, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

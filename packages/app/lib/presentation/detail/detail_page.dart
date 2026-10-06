@@ -23,17 +23,22 @@ class DetailPage extends HookConsumerWidget {
       return value.todo;
     }, [todoState]);
 
-    return Builder(builder: (context) {
-      if (todo != null) {
-        return Detail(
+    return Builder(
+      builder: (context) {
+        if (todo != null) {
+          return Detail(
             todo: todo,
             editTodo: () {
-              context.pushNamed(AppRoute.edit.name,
-                  params: <String, String>{'todo_id': todoId.toString()});
-            });
-      } else {
-        return Loading();
-      }
-    });
+              context.pushNamed(
+                AppRoute.edit.name,
+                pathParameters: <String, String>{'todo_id': todoId.toString()},
+              );
+            },
+          );
+        } else {
+          return Loading();
+        }
+      },
+    );
   }
 }

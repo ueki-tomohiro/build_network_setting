@@ -1,14 +1,15 @@
+import 'dart:async';
+
 import 'package:app/repository/todo_repository.dart';
 import 'package:app/state/todo_state.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class TodoEditController
-    extends AutoDisposeFamilyAsyncNotifier<TodoState, int?> {
-  late final int? _todoId;
+part 'todo_edit_controller.g.dart';
 
+@riverpod
+class TodoEditController extends _$TodoEditController {
   @override
-  TodoState build(int? todoId) {
-    _todoId = todoId;
+  FutureOr<TodoState> build(int? todoId) {
     return TodoState.undefined();
   }
 
@@ -27,16 +28,23 @@ class TodoEditController
   }
 
   Future<void> updateTodo(
-      String description, DateTime endDate, bool completed) async {
-    final todoId = _todoId;
+    String description,
+    DateTime endDate,
+    bool completed,
+  ) async {
+    final todoId = this.todoId;
     if (todoId == null) return;
 
     state = const AsyncLoading();
 
     state = await AsyncValue.guard<TodoState>(() async {
       final ITodoRepository repository = ref.read(todoRepositoryProvider);
-      final todo =
-          await repository.updateTodo(todoId, description, endDate, completed);
+      final todo = await repository.updateTodo(
+        todoId,
+        description,
+        endDate,
+        completed,
+      );
       if (todo != null) {
         return TodoState.updated(todo: todo);
       } else {
@@ -46,7 +54,7 @@ class TodoEditController
   }
 
   Future<void> deleteTodo() async {
-    final todoId = _todoId;
+    final todoId = this.todoId;
     if (todoId == null) return;
 
     state = const AsyncLoading();
@@ -59,7 +67,7 @@ class TodoEditController
   }
 
   Future<void> getTodo() async {
-    final todoId = _todoId;
+    final todoId = this.todoId;
     if (todoId == null) return;
 
     state = const AsyncLoading();
@@ -75,6 +83,3 @@ class TodoEditController
     });
   }
 }
-
-final todoEditControllerProvider = AsyncNotifierProvider.autoDispose
-    .family<TodoEditController, TodoState, int?>(TodoEditController.new);
