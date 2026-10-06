@@ -75,14 +75,14 @@ melos:
           - test
 
     test-ci:flutter:
-      exec: flutter test --machine > test.json
+      exec: flutter test --file-reporter json:test.json
       packageFilters:
         flutter: true
         dirExists:
           - test
 
     test-ci:dart:
-      exec: dart test --reporter json > test.json
+      exec: dart test --file-reporter json:test.json
       packageFilters:
         flutter: false
         dirExists:
